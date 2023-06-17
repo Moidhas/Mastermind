@@ -10,11 +10,12 @@ class Mastermind
   def play
     12.times do
       @human.guess_color
-      return puts 'HUMAN WON' if @human.guesses == @comp.code
+      return puts 'HUMAN WON' if @human.guess == @comp.code
 
-      @comp.print_hint(@human.guess_color)
+      @comp.print_hint(@human.guess)
     end
     puts 'COMPUTER WON'
+    puts "The correct code was #{@comp.code}"
   end
 end
 
@@ -40,16 +41,16 @@ end
 
 # Human
 class Human < Player
-  attr_accessor :guesses
+  attr_accessor :guess
 
   def guess_color
     loop do
       puts 'Input a 4 digit number from with each digit in between 1 to 6: '
-      self.guesses = input_troubles.to_s.split('').map do |digit|
+      self.guess = input_troubles.to_s.split('').map do |digit|
         digit = Integer(digit)
         digit if digit.between?(1, 6)
       end
-      break if guesses.length == 4 && !guesses.include?(nil)
+      break if guess.length == 4 && !guess.include?(nil)
 
       puts "Remember every digit has to be between 1 to 6 and 4 digits long. Try again.\n"
     end
@@ -58,6 +59,8 @@ end
 
 # Computer
 class Computer < Player
+  attr_reader :code
+
   def initialize
     super
     @code = Array.new(4).map { rand(1..6) }
@@ -66,11 +69,11 @@ class Computer < Player
   def print_hint(guess)
     location_hint(guess)
     color_hint(guess)
-    puts 'Clues: '
-    @correct_color.each_with_index do |color, index|
+    print 'Clues: '
+    @correct_location.each_with_index do |color, index|
       if color
         print "\e[91m\u25CF\e[0m "
-      elsif @correct_location[index]
+      elsif @correct_color[index]
         print "\e[37m\u25CB\e[0m "
       end
     end
@@ -90,3 +93,6 @@ class Computer < Player
     @correct_color = @code.map { |digit| digit if guess.include?(digit) }
   end
 end
+
+game = Mastermind.new
+game.play
