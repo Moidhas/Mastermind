@@ -10,7 +10,7 @@ class Mastermind
   def play
     12.times do
       @human.guess_color
-      return puts 'HUMAN WON' if @human.guess == @comp.code
+      return puts "HUMAN WON, the code was #{@comp.code}" if @human.guess == @comp.code
 
       @comp.print_hint(@human.guess)
     end
@@ -32,7 +32,7 @@ class Player
       input = gets.chomp
       input = Integer(input)
     rescue ArgumentError
-      puts 'Not a number, please input a number from (1-6): '
+      print "\n Not a number, please input a number from (1-6): "
       retry
     end
     input
@@ -45,7 +45,7 @@ class Human < Player
 
   def guess_color
     loop do
-      puts 'Input a 4 digit number from with each digit in between 1 to 6: '
+      print "\nInput a 4 digit number from with each digit in between 1 to 6: "
       self.guess = input_troubles.to_s.split('').map do |digit|
         digit = Integer(digit)
         digit if digit.between?(1, 6)
