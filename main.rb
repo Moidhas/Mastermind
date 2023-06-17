@@ -9,9 +9,12 @@ class Mastermind
   
   def play
     12.times do
-      human.guess_color
-      return puts 'HUMAN WON' if human.guesses == computer.code
+      @human.guess_color
+      return puts 'HUMAN WON' if @human.guesses == @comp.code
+
+      @comp.print_hint(@human.guess_color)
     end
+    puts 'COMPUTER WON'
   end
 end
 
