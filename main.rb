@@ -8,10 +8,10 @@ class Mastermind
   end
   
   def play
-    12.times {
+    12.times do
       human.guess_color
       return puts 'HUMAN WON' if human.guesses == computer.code
-    }
+    end
   end
 end
 
@@ -60,16 +60,30 @@ class Computer < Player
     @code = Array.new(4).map { rand(1..6) }
   end
 
-  def location_hint(guess)
-    index = 0
-    @correct_location = @code.filter do |digit|
-      state = (digit == guess[index])
-      index += 1
-      state
+  def print_hint(guess)
+    location_hint(guess)
+    color_hint(guess)
+    puts 'Clues: '
+    @correct_color.each_with_index do |color, index|
+      if color
+        print "\e[91m\u25CF\e[0m "
+      elsif @correct_location[index]
+        print "\e[37m\u25CB\e[0m "
+      end
     end
   end
 
-  def number_hint(guess)
-    @correct_number = @code.filter { |digit| guess.include?(digit) } - @correct_location
+  private
+
+  def location_hint(guess)
+    index = -1
+    @correct_location = @code.map do |digit|
+      index += 1
+      digit if digit == guess[index]
+    end
+  end
+
+  def color_hint(guess)
+    @correct_color = @code.map { |digit| digit if guess.include?(digit) }
   end
 end
